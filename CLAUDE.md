@@ -15,6 +15,15 @@ dotnet run
 
 No hay tests ni linter configurados.
 
+## Releases
+
+Al subir un tag `vX.Y.Z` se dispara `.github/workflows/release.yml`, que hace lo siguiente:
+1. `dotnet publish` self-contained win-x64, con `-p:Version` tomado del tag (pisa el `<Version>` del csproj);
+2. arma el instalador con Inno Setup (`installer.iss`, que copia toda la carpeta `publish`);
+3. crea el Release con `Output/AlarmaDecibeles-Setup.exe`.
+
+El nombre del asset no lleva versión a propósito: el link del README `releases/latest/download/AlarmaDecibeles-Setup.exe` depende de eso. No cambiar el `AppId` de `installer.iss`, porque Windows lo usa para reconocer las actualizaciones.
+
 ## Versión e ícono
 
 - La versión vive solo en `<Version>` del `.csproj` (`1.0.1`), y `MainWindow` la muestra como `v1.00.001` (`Major.Minor:00.Build:000`). Para sacar una versión nueva, se sube el último número: `1.0.2` se ve como `v1.00.002`.

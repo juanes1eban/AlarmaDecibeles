@@ -22,19 +22,30 @@
 | ▶️ **Iniciar / Detener** | La app solo escucha cuando tú se lo pides. |
 | 💾 **Recuerda tu configuración** | El micrófono y el nivel rojo quedan guardados para la próxima vez. |
 
+## 📥 Descarga
+
+<p align="center">
+  <a href="https://github.com/juanes1eban/AlarmaDecibeles/releases/latest/download/AlarmaDecibeles-Setup.exe"><b>⬇️ Descargar AlarmaDecibeles-Setup.exe</b></a>
+  <br>
+  <sub>Windows 10/11 de 64 bits · No necesitas instalar nada más · <a href="https://github.com/juanes1eban/AlarmaDecibeles/releases">Todas las versiones</a></sub>
+</p>
+
+El instalador no pide permisos de administrador. Crea un acceso directo en el menú Inicio y se desinstala desde **Configuración → Aplicaciones**.
+
+> [!WARNING]
+> **Windows puede mostrar "Windows protegió tu PC".**
+> El instalador no tiene firma digital (el certificado es pagado), así que SmartScreen no lo reconoce. Para instalarlo igual:
+>
+> 1. Haz clic en **Más información**.
+> 2. Haz clic en **Ejecutar de todas formas**.
+>
+> Si prefieres no confiar en el `.exe`, puedes [compilarlo tú mismo desde el código](#compilar).
+
 ## 🚀 Cómo usarla
 
-1. Instala el [SDK de .NET 10](https://aka.ms/dotnet/download). Solo funciona en Windows.
-2. Clona el repo y córrelo:
-
-   ```powershell
-   git clone https://github.com/juanes1eban/AlarmaDecibeles.git
-   cd AlarmaDecibeles
-   dotnet run
-   ```
-
-3. Aprieta **▶ Iniciar** y habla normal para ver dónde queda tu nivel.
-4. Sube o baja el fader hasta dejar el límite un poco por encima de tu voz normal. Listo.
+1. Abre **Alarma Decibeles** desde el menú Inicio.
+2. Aprieta **▶ Iniciar** y habla normal para ver dónde queda tu nivel.
+3. Sube o baja el fader hasta dejar el límite un poco por encima de tu voz normal. Listo.
 
 > 💡 **Tip:** parte con el límite alrededor de **−20 dB** y ajusta desde ahí. Cada micrófono capta distinto.
 
@@ -57,9 +68,22 @@ Los valores que ves son **dBFS**: decibeles relativos al máximo que puede capta
 
 ## 🏷️ Versiones
 
-La versión actual aparece bajo el botón **Micrófono**, con el formato `v1.00.001`, `v1.00.002`, etc.
+La versión actual aparece bajo el botón **Micrófono**, con el formato `v1.00.001`, `v1.00.002`, etc. Los cambios de cada versión están en [Releases](https://github.com/juanes1eban/AlarmaDecibeles/releases).
 
-## 🛠️ Hecho con
+<a id="compilar"></a>
+
+## 🛠️ Compilar desde el código
+
+1. Instala el [SDK de .NET 10](https://aka.ms/dotnet/download).
+2. Clona el repo y córrelo:
+
+   ```powershell
+   git clone https://github.com/juanes1eban/AlarmaDecibeles.git
+   cd AlarmaDecibeles
+   dotnet run
+   ```
+
+## 🧰 Hecho con
 
 - [WPF](https://learn.microsoft.com/dotnet/desktop/wpf/) sobre .NET 10
 - [NAudio](https://github.com/naudio/NAudio) para capturar el micrófono

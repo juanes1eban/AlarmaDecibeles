@@ -191,3 +191,5 @@ git_stats/*
 StyleCop.Cache
 bin
 obj
+# Salida local de Inno Setup
+Output/

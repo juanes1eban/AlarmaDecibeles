@@ -19,7 +19,7 @@
 | 📊 **Medidor LED** | Muestra en vivo el volumen del micrófono. La línea verde marca tu límite y los segmentos rojos se encienden cuando te pasas. |
 | 🔔 **Alarma** | Suena un beep apenas pasas el límite. Si sigues en rojo, vuelve a sonar cada 5 segundos. |
 | 🎤 **Micrófono** | Elige qué entrada de audio escuchar, o deja **"Por defecto seleccionado en Windows"** para usar la que tengas configurada en Windows. Pasa el mouse sobre el botón para ver cuál está activa. |
-| ▶️ **Iniciar / Detener** | La app solo escucha cuando tú se lo pides. |
+| ▶️ **Iniciar / Detener** | La app solo escucha cuando tú se lo pides. Si el micrófono se desconecta mientras escucha, te avisa en vez de quedarse callada. |
 | 💾 **Recuerda tu configuración** | El micrófono y el nivel rojo quedan guardados para la próxima vez. |
 
 ## 📥 Descarga

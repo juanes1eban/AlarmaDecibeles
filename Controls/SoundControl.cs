@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using NAudio;
 using NAudio.CoreAudioApi;
 using NAudio.Wave;
 
@@ -11,31 +12,26 @@ namespace AlarmaDecibeles.Controls
     /// </summary>
     public class SoundControl : IDisposable
     {
-        private static readonly TimeSpan AlarmCooldown = TimeSpan.FromSeconds(5);
-
-        private readonly WaveInEvent _waveIn;
-        private DateTime _lastAlarm = DateTime.MinValue;
-
-        public double ThresholdDb { get; set; } = -20;
-
-        public event Action<double>? LevelChanged;
-        public event Action? AlarmTriggered;
-
-        public SoundControl()
-        {
-            _waveIn = new WaveInEvent { WaveFormat = new WaveFormat(44100, 16, 1) };
-            _waveIn.DataAvailable += OnDataAvailable;
-        }
-
         /// <summary>WAVE_MAPPER: WinMM enruta al micrófono por defecto de Windows.</summary>
         public const int WindowsDefaultDevice = -1;
 
+        private static readonly TimeSpan AlarmCooldown = TimeSpan.FromSeconds(5);
+
+        // Se crea uno nuevo en cada Start(): así un error o un dispositivo desconectado
+        // no deja la instancia en un estado del que no se puede volver a iniciar.
+        private WaveInEvent? _waveIn;
+        private DateTime _lastAlarm = DateTime.MinValue;
+
+        /// <summary>Lo fija la UI desde la configuración guardada.</summary>
+        public double ThresholdDb { get; set; }
+
         /// <summary>Índice del dispositivo de entrada (o WindowsDefaultDevice); se aplica en el próximo Start().</summary>
-        public int DeviceNumber
-        {
-            get => _waveIn.DeviceNumber;
-            set => _waveIn.DeviceNumber = value;
-        }
+        public int DeviceNumber { get; set; } = WindowsDefaultDevice;
+
+        public event Action<double>? LevelChanged;
+        public event Action? AlarmTriggered;
+        /// <summary>La captura se detuvo sola (error o dispositivo desconectado). Llega con el motivo.</summary>
+        public event Action<string>? CaptureLost;
 
         public static List<string> GetInputDevices()
         {
@@ -61,8 +57,53 @@ namespace AlarmaDecibeles.Controls
             }
         }
 
-        public void Start() => _waveIn.StartRecording();
-        public void Stop() => _waveIn.StopRecording();
+        /// <summary>Empieza a capturar. Lanza MmException si el dispositivo no existe o no se puede abrir.</summary>
+        public void Start()
+        {
+            Stop();
+            var waveIn = new WaveInEvent { DeviceNumber = DeviceNumber, WaveFormat = new WaveFormat(44100, 16, 1) };
+            waveIn.DataAvailable += OnDataAvailable;
+            waveIn.RecordingStopped += OnRecordingStopped;
+            try
+            {
+                waveIn.StartRecording();
+            }
+            catch
+            {
+                Release(waveIn);
+                throw;
+            }
+            _waveIn = waveIn;
+        }
+
+        public void Stop()
+        {
+            if (_waveIn == null) return;
+            Release(_waveIn);
+            _waveIn = null;
+        }
+
+        private void Release(WaveInEvent waveIn)
+        {
+            // Se desuscribe primero: cualquier RecordingStopped que llegue después es inesperado.
+            waveIn.DataAvailable -= OnDataAvailable;
+            waveIn.RecordingStopped -= OnRecordingStopped;
+            try
+            {
+                waveIn.Dispose();
+            }
+            catch (MmException)
+            {
+                // El dispositivo ya no existe (p. ej. se desenchufó): no hay nada más que cerrar.
+            }
+        }
+
+        private void OnRecordingStopped(object? sender, StoppedEventArgs e)
+        {
+            if (sender != _waveIn) return;
+            Stop();
+            CaptureLost?.Invoke(e.Exception?.Message ?? "la grabación se detuvo");
+        }
 
         private void OnDataAvailable(object? sender, WaveInEventArgs e)
         {
@@ -91,8 +132,7 @@ namespace AlarmaDecibeles.Controls
 
         public void Dispose()
         {
-            _waveIn.DataAvailable -= OnDataAvailable;
-            _waveIn.Dispose();
+            Stop();
             GC.SuppressFinalize(this);
         }
     }

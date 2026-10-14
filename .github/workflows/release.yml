@@ -20,11 +20,15 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      # El tag se pasa por env (no con ${{ }} dentro del script) para que un nombre de tag
+      # con $(...) no se ejecute como código.
       - name: Versión desde el tag
         shell: pwsh
+        env:
+          TAG: ${{ github.ref_name }}
         run: |
-          $version = "${{ github.ref_name }}".TrimStart("v")
-          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "El tag debe ser vX.Y.Z (recibí ${{ github.ref_name }})" }
+          $version = $env:TAG.TrimStart("v")
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "El tag debe ser vX.Y.Z (recibí $env:TAG)" }
           "VERSION=$version" >> $env:GITHUB_ENV
 
       - name: Publicar app (self-contained, no necesita .NET instalado)
@@ -39,6 +43,8 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "ISCC falló" }
 
       - name: Crear Release
+        shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create ${{ github.ref_name }} Output/AlarmaDecibeles-Setup.exe --title "Alarma Decibeles ${{ github.ref_name }}" --generate-notes
+          TAG: ${{ github.ref_name }}
+        run: gh release create $env:TAG Output/AlarmaDecibeles-Setup.exe --title "Alarma Decibeles $env:TAG" --generate-notes

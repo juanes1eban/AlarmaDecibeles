@@ -7,7 +7,7 @@
     <UseWPF>true</UseWPF>
     <ApplicationIcon>mic.ico</ApplicationIcon>
     <!-- Se muestra como 1.00.001 (ver MainWindow). Para una nueva versión, sube el último número. -->
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

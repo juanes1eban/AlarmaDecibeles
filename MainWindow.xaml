@@ -70,7 +70,7 @@
         </Border>
 
         <Slider x:Name="ThresholdSlider" Style="{StaticResource Fader}" Height="300" Margin="12,0"
-                Minimum="-60" Maximum="0" Value="-20" LargeChange="2"
+                Minimum="-60" Maximum="0" LargeChange="2"
                 ValueChanged="ThresholdSlider_ValueChanged"/>
 
         <DockPanel Height="300">

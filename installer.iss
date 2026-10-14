@@ -2,8 +2,9 @@
 ; El workflow .github/workflows/release.yml lo compila con:
 ;   ISCC.exe /DAppVersion=1.0.2 /DPublishDir=publish installer.iss
 
+; La versión no se repite aquí: viene del tag (o del <Version> del .csproj si se compila a mano).
 #ifndef AppVersion
-  #define AppVersion "1.0.1"
+  #error Falta /DAppVersion=X.Y.Z
 #endif
 #ifndef PublishDir
   #define PublishDir "publish"

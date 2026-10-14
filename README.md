@@ -14,8 +14,10 @@
 |---|---|
 | 🎚️ **Fader "Nivel Rojo"** | Arrastra la perilla para elegir el máximo de decibeles permitido. Todo lo que quede sobre ese nivel es la zona roja. |
 | 📊 **Medidor LED** | Muestra en vivo el volumen del micrófono. La línea verde marca tu límite y los segmentos rojos se encienden cuando te pasas. |
-| 🔔 **Alarma** | Mientras estés sobre el límite, suena un beep del sistema. |
+| 🔔 **Alarma** | Suena un beep apenas pasas el límite. Si sigues en rojo, vuelve a sonar cada 5 segundos. |
+| 🎤 **Micrófono** | Elige qué entrada de audio escuchar, o deja **"Por defecto seleccionado en Windows"** para usar la que tengas configurada en Windows. Pasa el mouse sobre el botón para ver cuál está activa. |
 | ▶️ **Iniciar / Detener** | La app solo escucha cuando tú se lo pides. |
+| 💾 **Recuerda tu configuración** | El micrófono y el nivel rojo quedan guardados para la próxima vez. |
 
 ## 🚀 Cómo usarla
 
@@ -33,9 +35,26 @@
 
 > 💡 **Tip:** parte con el límite alrededor de **−20 dB** y ajusta desde ahí. Cada micrófono capta distinto.
 
+### ⚙️ Configuración
+
+Tus preferencias se guardan en `%APPDATA%\AlarmaDecibeles\settings.json`:
+
+```json
+{
+  "MicName": "Micrófono (Realtek(R) Audio)",
+  "ThresholdDb": -20
+}
+```
+
+El micrófono se guarda cuando aprietas **Guardar** en el selector, y el nivel rojo al cerrar la app. `"MicName": null` significa "por defecto de Windows", que también es lo que se usa si el micrófono guardado ya no está conectado. Para volver a los valores de fábrica, borra el archivo.
+
 ## 📏 Sobre los decibeles
 
 Los valores que ves son **dBFS**: decibeles relativos al máximo que puede captar tu micrófono. Van de **−60 dB** (silencio) a **0 dB** (el tope). No equivalen a los dB de un sonómetro, así que el mismo número puede sonar distinto en otro micrófono o con otra ganancia. Lo que importa es calibrar el fader con tu propio equipo.
+
+## 🏷️ Versiones
+
+La versión actual aparece bajo el botón **Micrófono**, con el formato `v1.00.001`, `v1.00.002`, etc.
 
 ## 🛠️ Hecho con
 

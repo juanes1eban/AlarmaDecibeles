@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Media;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using AlarmaDecibeles.Controls;
@@ -25,6 +28,7 @@ namespace AlarmaDecibeles
         private static readonly Brush ActiveBrush = Hex("#7FD6A8");
 
         private readonly SoundControl _soundControl = new();
+        private readonly Settings _settings = Settings.Load();
         // Vacía mientras corre InitializeComponent, así UpdateMeter es no-op si el slider dispara temprano.
         private readonly List<(Rectangle Led, double Db)> _leds = new();
         private double _level = MinDb;
@@ -33,6 +37,8 @@ namespace AlarmaDecibeles
         public MainWindow()
         {
             InitializeComponent();
+            var version = Assembly.GetExecutingAssembly().GetName().Version!;
+            VersionText.Text = $"v{version.Major}.{version.Minor:00}.{version.Build:000}";
 
             // UniformGrid llena de arriba hacia abajo: la fila 0 es el segmento más fuerte.
             for (int row = 0; row < Segments; row++)
@@ -45,16 +51,62 @@ namespace AlarmaDecibeles
                     _leds.Add((led, db));
                 }
             }
+            ThresholdSlider.Value = _settings.ThresholdDb;
             UpdateMeter();
+            ApplyMic();
 
             _soundControl.LevelChanged += OnLevelChanged;
             _soundControl.AlarmTriggered += OnAlarmTriggered;
-            Closing += (_, _) => _soundControl.Dispose();
+            Closing += (_, _) =>
+            {
+                SaveSettings();
+                _soundControl.Dispose();
+            };
         }
 
-        private void ToggleButton_Click(object sender, RoutedEventArgs e)
+        private void ToggleButton_Click(object sender, RoutedEventArgs e) => SetRunning(!_running);
+
+        private void MicButton_Click(object sender, RoutedEventArgs e)
         {
-            _running = !_running;
+            var devices = SoundControl.GetInputDevices();
+            var current = _soundControl.DeviceNumber == SoundControl.WindowsDefaultDevice
+                ? null
+                : devices.ElementAtOrDefault(_soundControl.DeviceNumber);
+            var dialog = new MicWindow(devices, current) { Owner = this };
+            if (dialog.ShowDialog() != true) return;
+
+            // El dispositivo solo cambia al iniciar de nuevo, así que se detiene la captura actual.
+            SetRunning(false);
+            _settings.MicName = dialog.SelectedMic;
+            SaveSettings();
+            ApplyMic();
+        }
+
+        private void ApplyMic()
+        {
+            // Sin micrófono guardado, o si el guardado ya no existe, se usa el por defecto de Windows.
+            int index = SoundControl.GetInputDevices().IndexOf(_settings.MicName ?? "");
+            _soundControl.DeviceNumber = index >= 0 ? index : SoundControl.WindowsDefaultDevice;
+        }
+
+        // Se calcula al abrir el tooltip para reflejar cambios hechos en Windows mientras la app corre.
+        private void MicButton_ToolTipOpening(object sender, ToolTipEventArgs e)
+        {
+            MicButton.ToolTip = _soundControl.DeviceNumber == SoundControl.WindowsDefaultDevice
+                ? $"Por defecto de Windows: {SoundControl.GetWindowsDefaultMicName() ?? "ninguno"}"
+                : SoundControl.GetInputDevices().ElementAtOrDefault(_soundControl.DeviceNumber) ?? "Micrófono desconectado";
+        }
+
+        private void SaveSettings()
+        {
+            _settings.ThresholdDb = ThresholdSlider.Value;
+            _settings.Save();
+        }
+
+        private void SetRunning(bool running)
+        {
+            if (running == _running) return;
+            _running = running;
             if (_running)
             {
                 _soundControl.Start();

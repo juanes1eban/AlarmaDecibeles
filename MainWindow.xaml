@@ -62,24 +62,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <Style x:Key="PanelButton" TargetType="Button">
-            <Setter Property="Foreground" Value="#7F9AA8"/>
-            <Setter Property="BorderBrush" Value="#4A5A66"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Width" Value="90"/>
-            <Setter Property="Height" Value="32"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="6" BorderThickness="2" Background="Transparent"
-                                BorderBrush="{TemplateBinding BorderBrush}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Window.Resources>
 
     <StackPanel Orientation="Horizontal" Margin="16">
@@ -91,11 +73,17 @@
                 Minimum="-60" Maximum="0" Value="-20" LargeChange="2"
                 ValueChanged="ThresholdSlider_ValueChanged"/>
 
-        <StackPanel VerticalAlignment="Bottom">
-            <TextBlock x:Name="LevelText" Text="--- dB" Foreground="#7F9AA8" FontSize="14"
+        <DockPanel Height="300">
+            <Button x:Name="MicButton" DockPanel.Dock="Top" Style="{StaticResource PanelButton}"
+                    Content="🎤 Micrófono" Click="MicButton_Click"
+                    ToolTip="" ToolTipOpening="MicButton_ToolTipOpening"/>
+            <TextBlock x:Name="VersionText" DockPanel.Dock="Top" Foreground="#5E6C75" FontSize="11"
+                       HorizontalAlignment="Center" Margin="0,6,0,0"/>
+            <Button x:Name="ToggleButton" DockPanel.Dock="Bottom" Style="{StaticResource PanelButton}"
+                    Content="▶ Iniciar" Click="ToggleButton_Click"/>
+            <TextBlock x:Name="LevelText" DockPanel.Dock="Bottom" Text="--- dB" Foreground="#7F9AA8" FontSize="14"
                        HorizontalAlignment="Center" Margin="0,0,0,12"/>
-            <Button x:Name="ToggleButton" Style="{StaticResource PanelButton}" Content="▶ Iniciar"
-                    Click="ToggleButton_Click"/>
-        </StackPanel>
+            <Border/>
+        </DockPanel>
     </StackPanel>
 </Window>

@@ -4,6 +4,27 @@
              xmlns:local="clr-namespace:AlarmaDecibeles"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style x:Key="PanelButton" TargetType="Button">
+            <Setter Property="Foreground" Value="#7F9AA8"/>
+            <Setter Property="BorderBrush" Value="#4A5A66"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="110"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="6" BorderThickness="2" Background="Transparent"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#7FD6A8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

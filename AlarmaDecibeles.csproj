@@ -5,6 +5,9 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>mic.ico</ApplicationIcon>
+    <!-- Se muestra como 1.00.001 (ver MainWindow). Para una nueva versión, sube el último número. -->
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

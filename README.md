@@ -5,8 +5,11 @@
 ¿Reuniones en las que terminas gritando sin darte cuenta? ¿Llamadas nocturnas con gente durmiendo al lado? AlarmaDecibeles escucha tu micrófono y suena apenas pasas el volumen que tú elijas.
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="Ventana de AlarmaDecibeles: medidor LED, fader de Nivel Rojo y botón Iniciar" width="260">
+  <img src="docs/screenshot.png" alt="Ventana principal de AlarmaDecibeles escuchando: medidor LED, fader de Nivel Rojo en -20 dB, botón Micrófono y botón Detener" width="260">
+  &nbsp;&nbsp;
+  <img src="docs/selector-microfono.png" alt="Selector de micrófono con la opción Por defecto seleccionado en Windows y la lista de entradas de audio" width="298">
 </p>
+<p align="center"><sub>La ventana principal escuchando el micrófono · El selector de fuente de audio</sub></p>
 
 ## ✨ Cómo funciona
 

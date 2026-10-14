@@ -11,7 +11,7 @@ namespace AlarmaDecibeles.Controls
     /// </summary>
     public class SoundControl : IDisposable
     {
-        private static readonly TimeSpan AlarmCooldown = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan AlarmCooldown = TimeSpan.FromSeconds(5);
 
         private readonly WaveInEvent _waveIn;
         private DateTime _lastAlarm = DateTime.MinValue;

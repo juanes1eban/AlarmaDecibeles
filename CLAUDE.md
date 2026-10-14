@@ -22,7 +22,7 @@ No hay tests ni linter configurados.
 
 ## Arquitectura
 
-- **`Controls/SoundControl.cs`**: envuelve un `WaveInEvent` (44.1 kHz, 16-bit, mono). Por cada buffer calcula el RMS, lo pasa a dBFS (`20·log10(rms)`, de −∞ a 0) y dispara `LevelChanged(db)`. Si el nivel supera `ThresholdDb`, también dispara `AlarmTriggered`, con un cooldown de 10 s para que los beeps no se solapen. Estos eventos llegan en el hilo de NAudio, así que la UI tiene que usar `Dispatcher.Invoke`.
+- **`Controls/SoundControl.cs`**: envuelve un `WaveInEvent` (44.1 kHz, 16-bit, mono). Por cada buffer calcula el RMS, lo pasa a dBFS (`20·log10(rms)`, de −∞ a 0) y dispara `LevelChanged(db)`. Si el nivel supera `ThresholdDb`, también dispara `AlarmTriggered`, con un cooldown de 5 s para que los beeps no se solapen. Estos eventos llegan en el hilo de NAudio, así que la UI tiene que usar `Dispatcher.Invoke`.
 - **`Settings.cs`**: JSON en `%APPDATA%\AlarmaDecibeles\settings.json` con `MicName` (`null` = por defecto de Windows) y `ThresholdDb`. Si falta el archivo o está corrupto, `Load()` vuelve a los valores por defecto. El micrófono se guarda por nombre, no por índice, porque los índices cambian al enchufar o desenchufar dispositivos. Ojo: los nombres de WinMM vienen truncados a 31 caracteres.
 - **`MicWindow`**: diálogo modal para elegir el micrófono. La primera opción, "Por defecto seleccionado en Windows", se guarda como `MicName = null` y usa `DeviceNumber = -1` (`WAVE_MAPPER`, que sigue al predeterminado de Windows). El nombre que se muestra sale de `MMDeviceEnumerator` (NAudio.Wasapi). Cambiar de dispositivo detiene la captura, porque `WaveInEvent.DeviceNumber` solo se aplica en el próximo `StartRecording()`.
 - **`App.xaml`**: estilos compartidos entre ventanas (`PanelButton`).
